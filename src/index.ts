@@ -1,10 +1,33 @@
 import fastify from "fastify";
+import multer from 'fastify-multer';
+import { v4 } from 'uuid';
 
 const server = fastify();
 const PORT = process.env.PORT || 8080;
 
-server.get('/', async (req, rep) => {
-  return 'Hello, World!';
+server.register(multer.contentParser);
+
+const storage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename(req, file, cb) {
+    cb(null, `${v4()}.jpg`);
+  }
+});
+const upload = multer({ storage });
+
+server.route({
+  method: 'POST',
+  url: '/upload',
+  preHandler: upload.single('photo'),
+  handler: (request, reply) => {
+    reply.code(200).send('SUCCESS');
+  }
+});
+
+server.get('/', async (request, reply) => {
+  reply.code(200).send('Hello, World!');
 });
 
 server.listen(PORT, (err, address) => {
