@@ -1,11 +1,13 @@
 import fastify from "fastify";
 import multer from 'fastify-multer';
 import { v4 } from 'uuid';
+import celebrityRouter from "./routes/celebrity";
 
 const server = fastify();
 const PORT = process.env.PORT || 8080;
 
 server.register(multer.contentParser);
+server.register(celebrityRouter, { prefix: "/celebrity" });
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
