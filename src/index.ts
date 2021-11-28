@@ -2,11 +2,19 @@ import fastify from "fastify";
 import multer from 'fastify-multer';
 import { v4 } from 'uuid';
 import celebrityRouter from "./routes/celebrity";
+import fastifyCors from "fastify-cors";
+import fastifyStatic from 'fastify-static';
+import path from "path";
 
 const server = fastify();
 const PORT = process.env.PORT || 8080;
 
 server.register(multer.contentParser);
+server.register(fastifyStatic, {
+  root: path.join(__dirname, '../uploads'),
+  prefix: '/uploads/',
+});
+server.register(fastifyCors, { origin: true });
 server.register(celebrityRouter, { prefix: "/celebrity" });
 
 const storage = multer.diskStorage({
