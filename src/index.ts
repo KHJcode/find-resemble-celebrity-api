@@ -1,7 +1,7 @@
 import fastify from "fastify";
 import multer from "fastify-multer";
 import { v4 } from "uuid";
-import celebrityRouter from "./routes/celebrity";
+import celebrityRouter from "./celebrity-router";
 import fastifyCors from "fastify-cors";
 import fastifyStatic from "fastify-static";
 import path from "path";
