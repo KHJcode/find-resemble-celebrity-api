@@ -9,6 +9,7 @@ function handleException(target: any, propertyKey: string, descriptor: PropertyD
       return await originalMethod(...args);
     } catch (error: any) {
       console.error(`[DATABASE ERROR]: ${error?.message}`);
+      throw new Error(error);
     }
   };
 }
@@ -40,9 +41,7 @@ export class CelebrityDatabase {
   @handleException
   async create(celebrity: Celebrity): Promise<void> {
     const newCelebrities = [...this.celebrities, celebrity];
-    await writeFile(this.fileUri, newCelebrities.toString(), (error: any) => {
-      if (error) throw error;
-    });
+    await writeFile(this.fileUri, newCelebrities.toString());
     this.celebrities = newCelebrities;
   }
 
