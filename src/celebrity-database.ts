@@ -1,57 +1,34 @@
-import { readFileSync } from "fs";
-import { readFile, writeFile } from "fs/promises";
+import StormDB from "stormdb";
 import { Celebrity } from "./types/celebrity";
 
-function handleException(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-  const originalMethod = descriptor.value;
-  descriptor.value = async (...args: any[]) => {
-    try {
-      return await originalMethod(...args);
-    } catch (error: any) {
-      console.error(`[DATABASE ERROR]: ${error?.message}`);
-      throw new Error(error);
-    }
-  };
-}
-
 export class CelebrityDatabase {
-  constructor(uri: string) {
-    this.fileUri = uri;
-    this.initialize();
+  private readonly database: StormDB;
+
+  constructor(path: string) {
+    const engine = new StormDB.localFileEngine(path);
+    this.database = new StormDB(engine);
+    this.database.default({});
+    console.log("Database connected...");
   }
 
-  private readonly fileUri: string;
-  private celebrities: Celebrity[] = [];
-
-  @handleException
-  private initialize(): void {
-    this.celebrities = JSON.parse(readFileSync(this.fileUri).toString());
-  }
-
-  @handleException
   async findAll(): Promise<Celebrity[]> {
-    if (!this.celebrities) {
-      const celebrities = JSON.parse((await readFile(this.fileUri)).toString());
-      this.celebrities = celebrities;
-      return celebrities;
-    }
-    return this.celebrities;
+    const data = await this.database.value();
+    return Object.values(data);
   }
 
-  @handleException
-  async create(celebrity: Celebrity): Promise<void> {
-    const newCelebrities = [...this.celebrities, celebrity];
-    await writeFile(this.fileUri, newCelebrities.toString());
-    this.celebrities = newCelebrities;
+  async create(celebrity: Celebrity) {
+    const { id } = celebrity;
+    const createObject: Celebrity = {
+      ...celebrity,
+      createdDate: new Date().toString(),
+    };
+    await this.database.set(id, createObject).save();
   }
 
-  @handleException
-  async update(): Promise<void> {
-
-  }
-
-  @handleException
-  async delete(): Promise<void> {
-
+  async delete(id: string) {
+    this.database.get(id).delete(true);
+    await this.database.save();
   }
 }
+
+export const celebrityDatabase = new CelebrityDatabase("../database.stormdb");
