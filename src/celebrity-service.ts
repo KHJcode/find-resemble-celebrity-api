@@ -1,4 +1,4 @@
-import { Celebrity } from "./types/celebrity";
+import { Celebrity, CelebrityItem } from "./types/celebrity";
 import { celebrityDatabase } from "./celebrity-database";
 import { nets, detectSingleFace, euclideanDistance } from "face-api.js";
 import { canvas, faceDetectionOptions } from "./commons";
@@ -22,9 +22,23 @@ export class CelebrityService {
     ]);
   }
 
-  async getAllCelebrities(): Promise<Celebrity[]> {
+  async getAllCelebrityItems(): Promise<CelebrityItem[]> {
+    const celebrities = await this.getAllCelebrities();
+    for (const celebrity of celebrities) {
+      delete celebrity.faceData;
+    }
+    return celebrities;
+  }
+
+  private async getAllCelebrities(): Promise<Celebrity[]> {
     const celebrities = await celebrityDatabase.findAll();
     return Object.values(celebrities);
+  }
+
+  async findCelebrityItemById(id: string): Promise<CelebrityItem | undefined> {
+    const celebrity = await celebrityDatabase.findOne(id);
+    if (celebrity) delete celebrity.faceData;
+    return celebrity;
   }
 
   async createCelebrity(celebrity: ICreateCelebrity): Promise<void> {

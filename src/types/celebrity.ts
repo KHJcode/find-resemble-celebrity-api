@@ -1,12 +1,12 @@
 export interface CelebrityId {
-  readonly id: string;
+  id: string;
 }
 
 export interface CelebrityItem extends CelebrityId {
-  readonly name: string;
+  name: string;
 }
 
 export interface Celebrity extends CelebrityItem{
-  readonly faceData: any;
-  readonly createdDate?: string;
+  faceData: any;
+  createdDate?: string;
 }

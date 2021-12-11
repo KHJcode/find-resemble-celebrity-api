@@ -16,6 +16,10 @@ export class CelebrityDatabase {
     return Object.values(data);
   }
 
+  async findOne(id: string): Promise<Celebrity> {
+    return await this.database.get(id).value();
+  }
+
   async create(celebrity: Celebrity) {
     const { id } = celebrity;
     const createObject: Celebrity = {

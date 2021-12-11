@@ -3,7 +3,7 @@ import { CreateCelebritySchema } from "./schema/create-celebrity";
 import multer from "fastify-multer";
 import { v4 } from "uuid";
 import { celebrityService } from "./celebrity-service";
-import { Celebrity } from "./types/celebrity";
+import { Celebrity, CelebrityItem } from "./types/celebrity";
 
 const storage = multer.diskStorage({
   destination(
@@ -29,19 +29,25 @@ export const celebrityRouter = async (
   server: FastifyInstance,
   _options: FastifyPluginOptions
 ) => {
-  server.get("/", async (_request, reply): Promise<Celebrity[]> => {
-    const celebrities = await celebrityService.getAllCelebrities();
-    return reply.status(200).send(celebrities);
+  server.get("/", async (_request, _reply): Promise<CelebrityItem[]> => {
+    return await celebrityService.getAllCelebrityItems();
   });
 
   server.get(
     "/resemble",
     { preHandler: upload.single("photo") },
-    async (request, reply): Promise<Celebrity | undefined> => {
+    async (request, _reply): Promise<Celebrity | undefined> => {
       const { photoId } = request as any;
-      const celebrity =
-        await celebrityService.getMostResembleCelebrityByPhotoId(photoId);
-      return reply.status(200).send(celebrity);
+      return await celebrityService.getMostResembleCelebrityByPhotoId(photoId);
+    }
+  );
+
+  server.get(
+    "/:id",
+    async (request, _reply): Promise<CelebrityItem | undefined> => {
+      return await celebrityService.findCelebrityItemById(
+        (request as any).params.id
+      );
     }
   );
 
@@ -50,7 +56,7 @@ export const celebrityRouter = async (
     { schema: CreateCelebritySchema },
     async (request, reply) => {
       await celebrityService.createCelebrity(request.body as any);
-      return reply.status(200).send("success");
+      return reply.status(201).send("success");
     }
   );
 
@@ -61,7 +67,7 @@ export const celebrityRouter = async (
     },
     async (request, reply) => {
       const { photoId } = request as any;
-      return reply.status(200).send(photoId);
+      return reply.status(201).send(photoId);
     }
   );
 };
