@@ -24,7 +24,7 @@ $ yarn install
 $ yarn lint
 
 # development
-$ yarn start:dev
+$ yarn dev
 
 # build
 $ yarn build
