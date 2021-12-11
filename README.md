@@ -30,7 +30,7 @@ $ yarn start:dev
 $ yarn build
 
 # production
-$ yarn start:prod
+$ yarn start
 ```
 
 <br/>
