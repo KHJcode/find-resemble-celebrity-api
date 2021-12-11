@@ -31,4 +31,4 @@ export class CelebrityDatabase {
   }
 }
 
-export const celebrityDatabase = new CelebrityDatabase("../database.stormdb");
+export const celebrityDatabase = new CelebrityDatabase("database.stormdb");

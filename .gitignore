@@ -119,4 +119,4 @@ dist
 
 uploads/*
 .idea
-*database.stormdb
+database.stormdb
