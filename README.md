@@ -13,6 +13,9 @@ $ cd find-resemble-celebrity
 
 # dependencies
 $ yarn install
+
+# package configuration
+$ yarn package
 ```
 
 <br/>
