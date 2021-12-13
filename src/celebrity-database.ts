@@ -34,5 +34,3 @@ export class CelebrityDatabase {
     await this.database.save();
   }
 }
-
-export const celebrityDatabase = new CelebrityDatabase("database.stormdb");

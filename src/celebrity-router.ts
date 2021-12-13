@@ -2,7 +2,8 @@ import { FastifyInstance, FastifyPluginOptions, FastifyRequest } from "fastify";
 import { CreateCelebritySchema } from "./schema/create-celebrity";
 import multer from "fastify-multer";
 import { v4 } from "uuid";
-import { celebrityService } from "./celebrity-service";
+import { celebrityService } from "./celebrity-module";
+import { celebrityTest } from "./celebrity-module";
 import { Celebrity, CelebrityItem } from "./types/celebrity";
 
 const storage = multer.diskStorage({
@@ -70,4 +71,9 @@ export const celebrityRouter = async (
       return reply.status(201).send(photoId);
     }
   );
+
+  server.post("/test", async (_request, reply) => {
+    await celebrityTest.run();
+    return reply.status(201).send("success");
+  });
 };

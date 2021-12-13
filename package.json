@@ -16,11 +16,13 @@
   "dependencies": {
     "@tensorflow/tfjs-node": "^1.7.0",
     "canvas": "^2.8.0",
+    "csv-parser": "^3.0.0",
     "face-api.js": "^0.22.2",
     "fastify": "^3.24.0",
     "fastify-cors": "^6.0.2",
     "fastify-multer": "^2.0.2",
     "fastify-static": "^4.5.0",
+    "image-downloader": "^4.0.3",
     "stormdb": "^0.5.2",
     "uuid": "^8.3.2"
   },

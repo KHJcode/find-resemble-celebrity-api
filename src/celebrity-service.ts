@@ -1,5 +1,5 @@
 import { Celebrity, CelebrityItem } from "./types/celebrity";
-import { celebrityDatabase } from "./celebrity-database";
+import { CelebrityDatabase } from "./celebrity-database";
 import { nets, detectSingleFace, euclideanDistance } from "face-api.js";
 import { canvas, faceDetectionOptions } from "./commons";
 
@@ -9,7 +9,7 @@ interface ICreateCelebrity {
 }
 
 export class CelebrityService {
-  constructor() {
+  constructor(private readonly celebrityDatabase: CelebrityDatabase) {
     this.loadFaceAPIModels();
   }
 
@@ -31,12 +31,12 @@ export class CelebrityService {
   }
 
   private async getAllCelebrities(): Promise<Celebrity[]> {
-    const celebrities = await celebrityDatabase.findAll();
+    const celebrities = await this.celebrityDatabase.findAll();
     return Object.values(celebrities);
   }
 
   async findCelebrityItemById(id: string): Promise<CelebrityItem | undefined> {
-    const celebrity = await celebrityDatabase.findOne(id);
+    const celebrity = await this.celebrityDatabase.findOne(id);
     if (celebrity) delete celebrity.faceData;
     return celebrity;
   }
@@ -45,7 +45,7 @@ export class CelebrityService {
     const { id, name } = celebrity;
     const faceData = await this.getFaceDataByPhotoId(id);
     if (!faceData) throw new Error("face data of the image is not found.");
-    await celebrityDatabase.create({ id, name, faceData });
+    await this.celebrityDatabase.create({ id, name, faceData });
   }
 
   async getMostResembleCelebrityByPhotoId(
@@ -74,5 +74,3 @@ export class CelebrityService {
       .withFaceDescriptor();
   }
 }
-
-export const celebrityService = new CelebrityService();
