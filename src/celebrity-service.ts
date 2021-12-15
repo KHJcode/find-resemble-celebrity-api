@@ -13,7 +13,7 @@ export class CelebrityService {
     this.loadFaceAPIModels();
   }
 
-  loadFaceAPIModels() {
+  private loadFaceAPIModels() {
     const MODELS_DIRECTORY = __dirname + "/../assets/models";
     Promise.all([
       nets.faceRecognitionNet.loadFromDisk(MODELS_DIRECTORY),
@@ -22,15 +22,15 @@ export class CelebrityService {
     ]);
   }
 
-  async getAllCelebrityItems(): Promise<CelebrityItem[]> {
-    const celebrities = await this.getAllCelebrities();
+  async findAllCelebrityItems(): Promise<CelebrityItem[]> {
+    const celebrities = await this.findAllCelebrities();
     for (const celebrity of celebrities) {
       delete celebrity.faceData;
     }
     return celebrities;
   }
 
-  private async getAllCelebrities(): Promise<Celebrity[]> {
+  private async findAllCelebrities(): Promise<Celebrity[]> {
     const celebrities = await this.celebrityDatabase.findAll();
     return Object.values(celebrities);
   }
@@ -48,13 +48,13 @@ export class CelebrityService {
     await this.celebrityDatabase.create({ id, name, faceData });
   }
 
-  async getMostResembleCelebrityByPhotoId(
+  async findMostResembleCelebrityByPhotoId(
     photoId: string
   ): Promise<Celebrity | undefined> {
-    const celebrities = await this.getAllCelebrities();
+    const celebrities = await this.findAllCelebrities();
     const faceData = await this.getFaceDataByPhotoId(photoId);
     let maxSimilarity = -1;
-    let currentCelebrity;
+    let currentCelebrity: Celebrity | undefined;
     for (const celebrity of celebrities) {
       const similarity = euclideanDistance(faceData, celebrity.faceData);
       if (maxSimilarity < similarity) {

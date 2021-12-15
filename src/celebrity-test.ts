@@ -31,10 +31,10 @@ export class CelebrityTest {
       await download
         .image({
           url,
-          dest: dest,
+          dest,
         })
         .then(({ filename }: any) => {
-          fs.rename(`${filename}`, `${dest}/${photoId}.jpg`, (err) => {
+          fs.rename(filename, `${dest}/${photoId}.jpg`, (err) => {
             if (err) throw err;
           });
         });

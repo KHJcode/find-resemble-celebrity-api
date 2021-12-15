@@ -1,37 +1,16 @@
-import { FastifyInstance, FastifyPluginOptions, FastifyRequest } from "fastify";
+import { FastifyInstance, FastifyPluginOptions } from "fastify";
 import { CreateCelebritySchema } from "./schema/create-celebrity";
-import multer from "fastify-multer";
-import { v4 } from "uuid";
 import { celebrityService } from "./celebrity-module";
 import { celebrityTest } from "./celebrity-module";
 import { Celebrity, CelebrityItem } from "./types/celebrity";
-
-const storage = multer.diskStorage({
-  destination(
-    _request: FastifyRequest,
-    _file: any,
-    cb: (arg0: null, arg1: string) => void
-  ) {
-    cb(null, "uploads/");
-  },
-  filename(
-    request: FastifyRequest,
-    _file: any,
-    cb: (arg0: null, arg1: string) => void
-  ) {
-    const id = v4();
-    (request as any).photoId = id;
-    cb(null, `${id}.jpg`);
-  },
-});
-const upload = multer({ storage });
+import { upload } from "./commons";
 
 export const celebrityRouter = async (
   server: FastifyInstance,
   _options: FastifyPluginOptions
 ) => {
   server.get("/", async (_request, _reply): Promise<CelebrityItem[]> => {
-    return await celebrityService.getAllCelebrityItems();
+    return await celebrityService.findAllCelebrityItems();
   });
 
   server.get(
@@ -39,7 +18,7 @@ export const celebrityRouter = async (
     { preHandler: upload.single("photo") },
     async (request, _reply): Promise<Celebrity | undefined> => {
       const { photoId } = request as any;
-      return await celebrityService.getMostResembleCelebrityByPhotoId(photoId);
+      return await celebrityService.findMostResembleCelebrityByPhotoId(photoId);
     }
   );
 
