@@ -24,7 +24,7 @@ export class CelebrityTest {
       });
   }
 
-  private async downloadImageAndGetPhotoId(url: string, path: string) {
+  private async downloadPhotoAndGetId(url: string, path: string) {
     const photoId = v4();
     const dest = `${__dirname}/${path}/`;
     try {
@@ -46,7 +46,7 @@ export class CelebrityTest {
 
   async run(): Promise<void> {
     for (const { name, image } of this.dataset) {
-      const id = await this.downloadImageAndGetPhotoId(image, "../uploads");
+      const id = await this.downloadPhotoAndGetId(image, "../uploads");
       console.log(`${id}.jpg saving...`);
       await this.celebrityService.createCelebrity({
         id,
