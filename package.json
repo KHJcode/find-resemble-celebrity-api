@@ -1,7 +1,7 @@
 {
-  "name": "find-resemble-celebrity",
-  "version": "1.0.0",
-  "main": "src/index.js",
+  "name": "find-resemble-celebrity-api-server",
+  "version": "1.0.1",
+  "main": "src/index.ts",
   "scripts": {
     "package": "node package-config.js",
     "lint": "eslint src/**/* --fix",
