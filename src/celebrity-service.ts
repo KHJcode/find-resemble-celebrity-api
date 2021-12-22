@@ -51,8 +51,10 @@ export class CelebrityService {
   async findMostResembleCelebrityByPhotoId(
     photoId: string
   ): Promise<Celebrity | undefined> {
-    const celebrities = await this.findAllCelebrities();
-    const faceData = await this.getFaceDataByPhotoId(photoId);
+    const [celebrities, faceData] = await Promise.all([
+      this.findAllCelebrities(),
+      this.getFaceDataByPhotoId(photoId),
+    ]);
     let maxSimilarity = -1;
     let currentCelebrity: Celebrity | undefined;
     for (const celebrity of celebrities) {
