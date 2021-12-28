@@ -71,8 +71,9 @@ export class CelebrityService {
     const image = (await canvas.loadImage(
       `${__dirname}/../uploads/${photoId}.jpg`
     )) as any;
-    return await detectSingleFace(image, faceDetectionOptions)
+    const faceData = await detectSingleFace(image, faceDetectionOptions)
       .withFaceLandmarks()
       .withFaceDescriptor();
+    return faceData?.descriptor;
   }
 }
