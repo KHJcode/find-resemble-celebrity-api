@@ -8,8 +8,8 @@ API server that explores photos of celebrities that look like you.
 
 ```bash
 # repository
-$ git clone https://github.com/KHJcode/find-resemble-celebrity-api-server.git
-$ cd find-resemble-celebrity-api-server
+$ git clone https://github.com/KHJcode/find-resemble-celebrity-api.git
+$ cd find-resemble-celebrity-api
 
 # dependencies
 $ yarn install
